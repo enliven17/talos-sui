@@ -1,0 +1,65 @@
+name: Contracts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/contracts.yml'
+  pull_request:
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/contracts.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contracts-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  SUI_VERSION: testnet-v1.39.3
+
+jobs:
+  test:
+    name: sui move test (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - talos_registry
+          - talos_name_service
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Sui CLI
+        id: cache-sui
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/bin/sui
+          key: sui-cli-${{ runner.os }}-${{ env.SUI_VERSION }}
+
+      - name: Install Sui CLI
+        if: steps.cache-sui.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.local/bin"
+          ASSET_URL="https://github.com/MystenLabs/sui/releases/download/${SUI_VERSION}/sui-${SUI_VERSION}-ubuntu-x86_64.tgz"
+          echo "Downloading $ASSET_URL"
+          curl -fsSL "$ASSET_URL" -o /tmp/sui.tgz
+          tar -xzf /tmp/sui.tgz -C /tmp
+          # Release archive contains the `sui` binary at the top level
+          install -m 0755 /tmp/sui "$HOME/.local/bin/sui"
+
+      - name: Add Sui to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Sui installation
+        run: sui --version
+
+      - name: Run Move tests
+        working-directory: contracts/${{ matrix.package }}
+        run: sui move test

@@ -1,0 +1,49 @@
+name: Python
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/prime-agent/**'
+      - '.github/workflows/python.yml'
+  pull_request:
+    paths:
+      - 'packages/prime-agent/**'
+      - '.github/workflows/python.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: prime-agent tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/prime-agent
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            packages/prime-agent/uv.lock
+            packages/prime-agent/pyproject.toml
+
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+
+      - name: Run pytest
+        run: pytest
