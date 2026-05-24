@@ -1,0 +1,98 @@
+version: 2
+updates:
+  # GitHub Actions used by all workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(ci)
+    labels:
+      - dependencies
+      - github-actions
+
+  # Next.js web app (pnpm workspace root)
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: chore(web)
+    labels:
+      - dependencies
+      - web
+    groups:
+      next:
+        patterns:
+          - 'next'
+          - '@next/*'
+          - 'eslint-config-next'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      sui:
+        patterns:
+          - '@mysten/*'
+      drizzle:
+        patterns:
+          - 'drizzle-orm'
+          - 'drizzle-kit'
+      dev-tooling:
+        dependency-type: development
+        patterns:
+          - 'typescript'
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - 'prettier'
+
+  # SDK package
+  - package-ecosystem: npm
+    directory: /packages/sdk
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(sdk)
+    labels:
+      - dependencies
+      - sdk
+    groups:
+      sui:
+        patterns:
+          - '@mysten/*'
+
+  # Python: prime-agent
+  - package-ecosystem: pip
+    directory: /packages/prime-agent
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(prime-agent)
+    labels:
+      - dependencies
+      - python
+      - prime-agent
+
+  # Python: openclaw skill
+  - package-ecosystem: pip
+    directory: /packages/openclaw
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(openclaw)
+    labels:
+      - dependencies
+      - python
+      - openclaw
