@@ -1,0 +1,12 @@
+[package]
+name = "mitos_TICKER"
+version = "0.1.0"
+edition = "2024.beta"
+license = "MIT"
+authors = ["Talos Protocol"]
+
+# Empty — Sui CLI auto-injects the framework at its native version.
+[dependencies]
+
+[addresses]
+mitos_TICKER = "0x0"

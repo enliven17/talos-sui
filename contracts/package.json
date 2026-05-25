@@ -1,0 +1,26 @@
+{
+  "name": "@talos/contracts",
+  "version": "0.2.0",
+  "description": "Sui Move packages for Talos Protocol (registry + name service)",
+  "private": true,
+  "scripts": {
+    "build": "pnpm build:registry && pnpm build:name-service",
+    "build:registry": "sui move build --path talos_registry",
+    "build:name-service": "sui move build --path talos_name_service",
+    "test": "pnpm test:registry && pnpm test:name-service",
+    "test:registry": "sui move test --path talos_registry",
+    "test:name-service": "sui move test --path talos_name_service",
+    "deploy:testnet": "sh ./deploy.sh testnet",
+    "deploy:mainnet": "sh ./deploy.sh mainnet"
+  },
+  "keywords": [
+    "sui",
+    "move",
+    "walrus",
+    "tatum",
+    "talos",
+    "smart-contracts",
+    "web3"
+  ],
+  "license": "MIT"
+}
