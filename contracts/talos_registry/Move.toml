@@ -1,0 +1,15 @@
+[package]
+name = "talos_registry"
+version = "0.1.0"
+edition = "2024.beta"
+license = "MIT"
+authors = ["Talos Protocol"]
+
+# No explicit Sui / MoveStdlib dependency — the Sui CLI auto-injects
+# Bridge, MoveStdlib, Sui, and SuiSystem at the version baked into the
+# CLI binary. Pinning them in this file causes a version skew between
+# the user's installed CLI and `framework/testnet`.
+[dependencies]
+
+[addresses]
+talos_registry = "0x0"
