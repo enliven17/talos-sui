@@ -1,0 +1,12 @@
+[package]
+name = "talos_badges"
+version = "0.1.0"
+edition = "2024.beta"
+license = "MIT"
+authors = ["Talos Protocol"]
+
+# Empty — Sui CLI auto-injects the framework.
+[dependencies]
+
+[addresses]
+talos_badges = "0x0"
