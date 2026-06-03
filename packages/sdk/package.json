@@ -1,0 +1,40 @@
+{
+  "name": "@talos-protocol/sdk",
+  "version": "0.2.0",
+  "description": "TypeScript SDK for the TALOS Protocol API on Sui",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/talos-protocol/talos-sui",
+    "directory": "packages/sdk"
+  },
+  "keywords": [
+    "talos",
+    "sui",
+    "walrus",
+    "tatum",
+    "ai-agent",
+    "x402",
+    "move",
+    "commerce"
+  ]
+}
