@@ -2,14 +2,51 @@
 
 import { useEffect, useRef } from "react";
 
+interface Palette {
+  bg: string;
+  base: [number, number, number]; // muted text RGB
+  peak: [number, number, number]; // accent RGB (pink)
+}
+
+const LIGHT_PALETTE: Palette = {
+  bg: "#FCF8F8",
+  base: [142, 131, 131],
+  peak: [245, 175, 175],
+};
+
+const DARK_PALETTE: Palette = {
+  bg: "#0F0D0D",
+  base: [180, 160, 160],
+  peak: [245, 175, 175],
+};
+
+function readPalette(): Palette {
+  if (typeof document === "undefined") return LIGHT_PALETTE;
+  return document.documentElement.dataset.theme === "dark"
+    ? DARK_PALETTE
+    : LIGHT_PALETTE;
+}
+
 export function HeroClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const paletteRef = useRef<Palette>(LIGHT_PALETTE);
 
   useEffect(() => {
+    paletteRef.current = readPalette();
+
+    // Re-read the palette whenever ThemeToggle flips the html data-theme attr.
+    const observer = new MutationObserver(() => {
+      paletteRef.current = readPalette();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) return () => observer.disconnect();
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return () => observer.disconnect();
 
     const dpr = window.devicePixelRatio || 1;
     const chars = ".:-=+*#%@";
@@ -38,9 +75,13 @@ export function HeroClient() {
     let animId: number;
 
     function draw() {
-      ctx!.fillStyle = "#FCF8F8";
+      const palette = paletteRef.current;
+      ctx!.fillStyle = palette.bg;
       ctx!.fillRect(0, 0, W, H);
       ctx!.font = `${fontSize}px monospace`;
+
+      const [br, bg, bb] = palette.base;
+      const [pr, pg, pb] = palette.peak;
 
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
@@ -53,17 +94,21 @@ export function HeroClient() {
             Math.cos(y * 0.3 + frame * 0.02);
           const val = wave * 0.7 + noise * 0.3;
           const idx = Math.floor(
-            Math.max(0, Math.min(1, val)) * (chars.length - 1)
+            Math.max(0, Math.min(1, val)) * (chars.length - 1),
           );
 
-          const alpha = 0.2 + val * 0.4;
-          // Blend pink accent into regions near wave peaks
+          const alpha = 0.22 + val * 0.45;
+          // Blend the accent (peak palette) into regions near wave peaks
           const pinkMix = Math.max(0, wave - 0.6) * 2.5; // 0..1 at wave peaks
-          const r = Math.round(142 * (1 - pinkMix) + 245 * pinkMix);
-          const g = Math.round(131 * (1 - pinkMix) + 175 * pinkMix);
-          const b = Math.round(131 * (1 - pinkMix) + 175 * pinkMix);
+          const r = Math.round(br * (1 - pinkMix) + pr * pinkMix);
+          const g = Math.round(bg * (1 - pinkMix) + pg * pinkMix);
+          const b = Math.round(bb * (1 - pinkMix) + pb * pinkMix);
           ctx!.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-          ctx!.fillText(chars[idx], x * fontSize * 0.6, y * fontSize + fontSize);
+          ctx!.fillText(
+            chars[idx],
+            x * fontSize * 0.6,
+            y * fontSize + fontSize,
+          );
         }
       }
       frame++;
@@ -74,13 +119,14 @@ export function HeroClient() {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
+      observer.disconnect();
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full opacity-60"
+      className="absolute inset-0 w-full h-full opacity-70"
     />
   );
 }
