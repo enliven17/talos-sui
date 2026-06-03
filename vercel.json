@@ -2,8 +2,8 @@
   "framework": "nextjs",
   "regions": ["iad1"],
 
-  "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --dir web build",
+  "installCommand": "cd web && pnpm install --frozen-lockfile --ignore-workspace",
+  "buildCommand": "cd web && pnpm build",
   "outputDirectory": "web/.next",
 
   "build": {
