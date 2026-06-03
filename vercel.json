@@ -1,6 +1,14 @@
 {
   "framework": "nextjs",
-  "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install",
-  "outputDirectory": "web/.next"
+  "regions": ["iad1"],
+
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --dir web build",
+  "outputDirectory": "web/.next",
+
+  "build": {
+    "env": {
+      "ENABLE_EXPERIMENTAL_COREPACK": "1"
+    }
+  }
 }
