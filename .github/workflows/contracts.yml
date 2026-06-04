@@ -33,7 +33,7 @@ jobs:
           - talos_name_service
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Cache Sui CLI
         id: cache-sui
