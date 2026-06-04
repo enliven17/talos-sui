@@ -27,7 +27,7 @@
     "react-dom": "19.2.4",
     "react-force-graph-2d": "^1.27.0",
     "ws": "^8.18.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
