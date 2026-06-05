@@ -65,7 +65,7 @@ export function Header() {
         </div>
 
         {/* Right: desktop actions + mobile hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-4">
           <RpcStatus />
           <ThemeToggle />
           {/* Desktop only */}
