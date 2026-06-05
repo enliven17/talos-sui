@@ -29,9 +29,9 @@ export function Header() {
 
   return (
     <header className="border-b border-border bg-background relative z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-4 lg:gap-6">
         {/* Left: logo + desktop nav */}
-        <div className="flex items-center gap-6 lg:gap-8 min-w-0">
+        <div className="flex items-center gap-6 lg:gap-7 min-w-0 flex-1 overflow-hidden">
           <Link
             href="/"
             className="text-nav-accent text-3xl sm:text-4xl font-ruthie shrink-0"

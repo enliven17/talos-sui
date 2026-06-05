@@ -44,11 +44,10 @@ export function RpcStatus() {
   if (!status) {
     return (
       <span
-        className="hidden xl:inline-flex shrink-0 items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted font-mono"
+        className="hidden 2xl:inline-flex shrink-0 items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted font-mono"
         title="Checking RPC..."
       >
         <span className="w-1.5 h-1.5 rounded-full bg-muted/50 animate-pulse" />
-        RPC
       </span>
     );
   }
@@ -57,16 +56,16 @@ export function RpcStatus() {
   const label = status.provider === "tatum" ? "Tatum" : "Sui RPC";
 
   return (
-    <div className="relative hidden xl:block shrink-0">
+    <div className="relative hidden 2xl:block shrink-0">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
         className="inline-flex items-center gap-1.5 whitespace-nowrap text-[10px] uppercase tracking-widest text-muted hover:text-foreground font-mono transition-colors"
+        title={`${label} · ${status.latencyMs ?? "?"}ms`}
       >
         <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
-        <span>{label}</span>
         {status.latencyMs != null && (
-          <span className="text-muted">· {status.latencyMs}ms</span>
+          <span className="text-muted">{status.latencyMs}ms</span>
         )}
       </button>
 
