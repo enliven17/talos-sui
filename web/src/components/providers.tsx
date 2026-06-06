@@ -23,14 +23,28 @@ const NETWORK = (process.env.NEXT_PUBLIC_SUI_NETWORK ?? "testnet") as
   | "testnet"
   | "devnet";
 
+/**
+ * Client-side network config.
+ *
+ * Browser SuiClient calls cannot go through `*.gateway.tatum.io` directly
+ * because the Tatum gateway's CORS preflight does not allow the
+ * `client-sdk-version` header that `@mysten/sui` injects automatically.
+ *
+ * Workaround: use the public Sui fullnode in the browser. ALL server-side
+ * RPC (every API route, `/api/rpc-status`, `/api/mcp/jsonrpc`,
+ * `/api/playground/rpc`, the receiver, the wallet flush, the activity
+ * batch, etc.) still goes through Tatum via `web/src/lib/sui.ts` — the
+ * Tatum integration is on the server side where CORS does not apply.
+ *
+ * If `NEXT_PUBLIC_SUI_RPC_URL` is explicitly set, it wins (advanced users
+ * who run a CORS-proxy in front of Tatum can opt in).
+ */
 const { networkConfig } = createNetworkConfig({
   mainnet: {
-    url:
-      process.env.NEXT_PUBLIC_SUI_RPC_URL ?? "https://sui-mainnet.gateway.tatum.io",
+    url: process.env.NEXT_PUBLIC_SUI_RPC_URL ?? getFullnodeUrl("mainnet"),
   },
   testnet: {
-    url:
-      process.env.NEXT_PUBLIC_SUI_RPC_URL ?? "https://sui-testnet.gateway.tatum.io",
+    url: process.env.NEXT_PUBLIC_SUI_RPC_URL ?? getFullnodeUrl("testnet"),
   },
   devnet: {
     url: process.env.NEXT_PUBLIC_SUI_RPC_URL ?? getFullnodeUrl("devnet"),
